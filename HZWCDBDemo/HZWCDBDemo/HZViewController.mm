@@ -31,8 +31,15 @@
     message.content = @"Hello, 22323232323!";
     message.createTime = [NSDate date];
     message.modifiedTime = [NSDate date];
+    
+    HZMessage *message2 = [[HZMessage alloc] init];
+    message2.localID = random();
+    message2.content = @"Hello, 22324444422222211111";
+    message2.createTime = [NSDate date];
+    message2.modifiedTime = [NSDate date];
     //
-    BOOL result = [[HZDB sharedDefault] insertObject:message into:@"HZMessage"];
+    //    BOOL result = [[HZDB sharedDefault] insertObjects:@[message, message2] into:@"HZMessage"];
+    BOOL result = [[HZDB sharedDefault] insertOrReplaceObjects:@[message, message2] into:@"HZMessage"];
     if (result == YES) {
         NSLog(@"--------新增成功");
     } else {
@@ -71,13 +78,13 @@
     
     //查询
     //SELECT * FROM message ORDER BY localID
-//    NSArray<HZMessage *> *message = [[HZDB sharedDefault] getObjectsOfClass:HZMessage.class
-//                                                                  fromTable:@"HZMessage"
+    //    NSArray<HZMessage *> *message = [[HZDB sharedDefault] getObjectsOfClass:HZMessage.class
+    //                                                                  fromTable:@"HZMessage"
     NSArray<HZMessage *> *message = [[HZDB sharedDefault] getObjectsOfClass:HZMessage.class
                                                                   fromTable:@"HZMessage"
                                                                     orderBy:HZMessage.createTime.order(WCTOrderedDescending)];
     
-//    NSArray<HZMessage *> *message = [[HZDB sharedDefault] getObjectsOfClass:HZMessage.class fromTable:@"HZMessage" where:HZMessage.content.like("hz") && HZMessage.createTime.order(WCTOrderedAscending)];
+    //    NSArray<HZMessage *> *message = [[HZDB sharedDefault] getObjectsOfClass:HZMessage.class fromTable:@"HZMessage" where:HZMessage.content.like("hz") && HZMessage.createTime.order(WCTOrderedAscending)];
     
     
     for (HZMessage *msg in message) {
@@ -89,13 +96,13 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

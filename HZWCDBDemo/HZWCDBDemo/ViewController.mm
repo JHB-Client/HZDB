@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-
+    
     [self setDataBase];
 }
 
@@ -37,6 +37,7 @@
     message.modifiedTime = [NSDate date];
     //
     BOOL result = [[HZDB sharedDefault] insertObject:message into:@"Message"];
+    //    BOOL result = [[HZDB sharedDefault] insertOrReplaceObject:message into:@"Message"];
     if (result == YES) {
         NSLog(@"--------新增成功");
     } else {
@@ -47,8 +48,10 @@
 - (IBAction)deleteData:(id)sender {
     //删除
     //DELETE FROM message WHERE localID>0;
-    BOOL result = [[HZDB sharedDefault] deleteObjectsFromTable:@"Message"
-                                             where:HZMessage.localID % 2 == 0];
+    // 删除对象
+    //    BOOL result = [[HZDB sharedDefault] deleteObjectsFromTable:@"Message"
+    //                                             where:HZMessage.localID % 2 == 0];
+    BOOL result = [[HZDB sharedDefault] deleteAllObjectsFromTable:@"Message"];
     if (result == YES) {
         NSLog(@"--------删除成功");
     } else {
@@ -63,7 +66,27 @@
     //UPDATE message SET content="Hello, Wechat!";
     HZMessage *message = [[HZMessage alloc] init];
     message.content = [NSString stringWithFormat:@"Hello, Wechat!---%ld", random()];
-    BOOL result = [[HZDB sharedDefault] updateAllRowsInTable:@"Message" onProperty:HZMessage.content withObject:message];
+    message.unused = true;
+    //
+    //1.
+    //    BOOL result = [[HZDB sharedDefault] updateAllRowsInTable:@"Message" onProperty:HZMessage.content withObject:message];
+    //2.
+    //    BOOL result = [[HZDB sharedDefault] updateAllRowsInTable:@"Message" onProperty:HZMessage.content withValue:@"哈哈哈哈哈"];
+    
+    //第一种：
+    
+    NSArray *row = @[message.content, @(message.unused)];
+    BOOL result = [[HZDB sharedDefault] updateRowsInTable:@"Message"
+                                             onProperties:{HZMessage.content, HZMessage.unused}
+                                                  withRow:row
+                                                    where:HZMessage.localID % 2 == 0];
+    //第二种：
+    //    BOOL result = [[HZDB sharedDefault] updateRowsInTable:@"message"
+    //                                      onProperties:{HZMessage.content, HZMessage.count}
+    //                                        withObject:message
+    //                                             where:HZMessage.localID == 2];
+    
+    //
     if (result == YES) {
         NSLog(@"--------修改成功");
     } else {
@@ -75,11 +98,7 @@
     
     //查询
     //SELECT * FROM message ORDER BY localID
-    NSArray<HZMessage *> *message = [[HZDB sharedDefault] getObjectsOfClass:HZMessage.class
-                                                    fromTable:@"Message"
-                                                      orderBy:HZMessage.localID.order()];
-    
-    
+    NSArray<HZMessage *> *message = [[HZDB sharedDefault] getObjectsOfClass:HZMessage.class fromTable:@"Message" orderBy:HZMessage.localID.order()];
     for (HZMessage *msg in message) {
         NSLog(@"--%d----:%@------%d", msg.localID, msg.content, msg.unused);
     }

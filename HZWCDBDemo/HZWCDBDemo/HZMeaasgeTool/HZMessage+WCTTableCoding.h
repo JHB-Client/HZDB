@@ -9,8 +9,10 @@
 #import "HZMessage.h"
 #import "HZDB.h"
 @interface HZMessage (WCTTableCoding)<WCTTableCoding>
+#pragma mark ----------------- 表的字段！！！！ ------------------
 WCDB_PROPERTY(localID)
 WCDB_PROPERTY(content)
 WCDB_PROPERTY(createTime)
 WCDB_PROPERTY(modifiedTime)
+WCDB_PROPERTY(unused)
 @end

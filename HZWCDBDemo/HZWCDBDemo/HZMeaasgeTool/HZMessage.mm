@@ -14,6 +14,7 @@ WCDB_SYNTHESIZE(HZMessage, localID)
 WCDB_SYNTHESIZE(HZMessage, content)
 WCDB_SYNTHESIZE(HZMessage, createTime)
 WCDB_SYNTHESIZE(HZMessage, modifiedTime)
+WCDB_SYNTHESIZE(HZMessage, unused)
 //
 WCDB_PRIMARY(HZMessage, localID)
 //
